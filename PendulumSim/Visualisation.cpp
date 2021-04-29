@@ -30,7 +30,7 @@ HRESULT  Visu::CreateGraphicResources() {  //Hier alle Resourcen erstellen die m
 		D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
 		hr = pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(), D2D1::HwndRenderTargetProperties(m_hwnd, size), &pRenderTarget); // erstelle das Render Target
 		if (SUCCEEDED(hr)) { //nur weiter machen wenn alles geklappt hat
-			const D2D1_COLOR_F color = D2D1::ColorF(1.0f, 1.0f, 0.f); //Farbe für den Brush
+			const D2D1_COLOR_F color = D2D1::ColorF(1.0f, 0.0f, 0.f); //Farbe für den Brush
 			hr = pRenderTarget->CreateSolidColorBrush(color, &pBrush);
 		}
 
@@ -49,6 +49,17 @@ void  Visu::OnPaint() {
 	//Drawing Part
 	pRenderTarget->BeginDraw(); //Los gehts mit Zeichnen yayyy
 	pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::AntiqueWhite)); //Macht das ganze Fenster AntiqueWhite
+
+	//Draw Pendulum
+	pMutex->lock(); //Import newest angle
+	float a = *fAngle;
+	pMutex->unlock();
+
+	float x = size.width / 2;
+	float y = size.height / 2;
+	float radius = min(x, y);
+	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Rotation(conv * a, D2D1::Point2F(x, y)));
+	pRenderTarget->DrawLine(D2D1::Point2F(x, y), D2D1::Point2F(x - radius, y) , pBrush, 10.f);
 
 	//Cleanup
 	hr = pRenderTarget->EndDraw();

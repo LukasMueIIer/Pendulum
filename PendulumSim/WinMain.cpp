@@ -19,9 +19,9 @@ constexpr float w0 = 0; // initiale Winkelgeschw.
 constexpr float dw0 = 0; //ableitung winkelgeschw.
 constexpr float g = 9.81; //Gravitation
 constexpr float m = 1.0f; //Masse
-constexpr float conv = 180.f / 3.14159265358979323846f; //von Rad zu Degree
 
-constexpr float cPow(float a, float b) { //wrapper um schon währen compiling auszuwerten
+
+float cPow(const float a,const float b) { //wrapper um schon währen compiling auszuwerten
 	return pow(a, b);
 }
 
@@ -88,7 +88,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	}
 	ShowWindow(MainVis.Window(), nCmdShow); //Zeige das Fenster an
 	
-	MainVis.setMutex(&mute1); //Mutex an Window Stuckt übergeben
+	MainVis.setVar(&mute1 , &alpha); //Mutex an Window Stuckt übergeben
 
 	std::thread t1 = std::thread(DataProducer, MainVis.Window()); //Starte den Data Producer Process
 	t1.detach();
